@@ -20,7 +20,21 @@ void BatchRanges(int w, int n, std::vector<int>& starts, std::vector<int>& ends)
     starts.reserve(n);
     ends.reserve(n);
 
-    long double a = 1;
+    int batchSize = w / n;
+    for (int t = 0; t < n; t++)
+    {
+        starts.push_back(batchSize * t);
+        if (t < n - 1)
+        {
+            ends.push_back(batchSize * (t + 1) - 1);
+        }
+        else
+        {
+            ends.push_back(w - 1);
+        }
+    }
+
+    /*long double a = 1;
 
     for (int i = 0; i < n - 1; i++)
     {
@@ -39,7 +53,7 @@ void BatchRanges(int w, int n, std::vector<int>& starts, std::vector<int>& ends)
 
         starts.push_back(ceil(start));
         ends.push_back((i == n - 1) ? (w - 1) : (floor(end)));
-    }
+    }*/
 }
 
 void CheckBatch(int startIndex, int endIndex, int arrOffset, mpz_t& startProd, std::vector<uint64_t>& primes)
