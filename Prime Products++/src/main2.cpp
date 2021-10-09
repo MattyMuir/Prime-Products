@@ -47,7 +47,7 @@ void CheckBatch(int startIndex, int endIndex, int arrOffset, mpz_t& startProd, s
     Timer t;
     int threadStart = startIndex;
 
-    for (startIndex; startIndex <= endIndex; startIndex++)
+    for (; startIndex <= endIndex; startIndex++)
     {
         mpz_mul_ui(startProd, startProd, primes[startIndex - 1 - arrOffset]);
         mpz_add_ui(startProd, startProd, 1);
@@ -99,7 +99,7 @@ int main()
 
     preArr.Reserve(start - 1);
     arr.Reserve(N);
-    for (int p : prePrimes) { preArr.BackUI(p); }
+    for (uint64_t p : prePrimes) { preArr.BackUI(p); }
     for (int p = 0; p < primes.size() - 1; p++) { arr.BackUI(primes[p]); }
     prePrimes.clear();
 
