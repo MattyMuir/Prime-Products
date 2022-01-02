@@ -162,7 +162,6 @@ void Branch(int start, int interval, int max)
         getline(std::cin, NStr);
     }
     unsigned int N = std::stoi(NStr, nullptr, 10);
-    //unsigned int N = 50000;
 
     std::vector<std::thread> threads;
     int hardThreads = std::thread::hardware_concurrency();
