@@ -10,7 +10,7 @@
 #define CONSTANT_WIDTH_BATCHES 0
 #define LOG_STATUS 1
 
-int IntInput(std::string message)
+/*int IntInput(std::string message)
 {
     std::string str;
     std::cout << message;
