@@ -7,13 +7,13 @@
 #include "mpzArray.h"
 #include "Timer.h"
 
-int IntInput(std::string message)
+/*int IntInput(std::string message)
 {
     std::string str;
     std::cout << message;
     getline(std::cin, str);
     return std::stoi(str, nullptr, 10);
-}
+}*/
 
 void BatchRanges(int w, int n, std::vector<int>& starts, std::vector<int>& ends)
 {
@@ -80,7 +80,7 @@ void CheckBatch(int startIndex, int endIndex, int arrOffset, mpz_t& startProd, s
     std::cout << msg.str();
 }
 
-int main()
+/*int main()
 {
     unsigned int start = IntInput("Start: ");
     unsigned int end = IntInput("End: ");
@@ -213,4 +213,4 @@ int main()
     std::cout << "finished" << std::endl;
 
     std::cin.get();
-}
+}*/
