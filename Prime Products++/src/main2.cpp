@@ -7,7 +7,10 @@
 #include "mpzArray.h"
 #include "Timer.h"
 
-/*int IntInput(std::string message)
+#define CONSTANT_WIDTH_BATCHES 0
+#define LOG_STATUS 1
+
+int IntInput(std::string message)
 {
     std::string str;
     std::cout << message;
@@ -20,6 +23,7 @@ void BatchRanges(int w, int n, std::vector<int>& starts, std::vector<int>& ends)
     starts.reserve(n);
     ends.reserve(n);
 
+#if CONSTANT_WIDTH_BATCHES == 1
     int batchSize = w / n;
     for (int t = 0; t < n; t++)
     {
@@ -33,8 +37,8 @@ void BatchRanges(int w, int n, std::vector<int>& starts, std::vector<int>& ends)
             ends.push_back(w - 1);
         }
     }
-
-    /*long double a = 1;
+#else
+    long double a = 1;
 
     for (int i = 0; i < n - 1; i++)
     {
@@ -53,12 +57,15 @@ void BatchRanges(int w, int n, std::vector<int>& starts, std::vector<int>& ends)
 
         starts.push_back(ceil(start));
         ends.push_back((i == n - 1) ? (w - 1) : (floor(end)));
-    }*/
+    }
+#endif
 }
 
 void CheckBatch(int startIndex, int endIndex, int arrOffset, mpz_t& startProd, std::vector<uint64_t>& primes)
 {
+#if LOG_STATUS == 1
     Timer t;
+#endif
     int threadStart = startIndex;
 
     for (; startIndex <= endIndex; startIndex++)
@@ -74,10 +81,12 @@ void CheckBatch(int startIndex, int endIndex, int arrOffset, mpz_t& startProd, s
         mpz_sub_ui(startProd, startProd, 1);
     }
 
+#if LOG_STATUS == 1
     t.Stop();
     std::stringstream msg;
     msg << "Thread: " << threadStart << " - " << endIndex << " finished in " << t.duration * 0.000001 << "s" << std::endl;
     std::cout << msg.str();
+#endif
 }
 
 /*int main()
@@ -209,8 +218,8 @@ void CheckBatch(int startIndex, int endIndex, int arrOffset, mpz_t& startProd, s
     for (std::thread& t : threads) { t.join(); }
 
     t.Stop();
-    std::cout << t.duration * 0.000001 << std::endl;
-    std::cout << "finished" << std::endl;
+    std::cout << "Took: " << t.duration * 0.001 << "ms" << std::endl;
+    std::cout << "Finished!" << std::endl;
 
     std::cin.get();
 }*/
