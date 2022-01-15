@@ -6,6 +6,7 @@
 
 #include <primesieve.hpp>
 #include <libdivide.h>
+//#include <benchmark/benchmark.h>
 
 #include "Timer.h"
 
@@ -44,19 +45,11 @@ void Branch(uint64_t start, uint64_t end, int threadNum, int threadIndex, std::v
     }
 }
 
-int main()
+void Run(uint64_t start, uint64_t end)
 {
-    //uint64_t start = IntInput("Start: ");
-    //uint64_t end = IntInput("End: ");
-
-    uint64_t start = 1;
-    uint64_t end = 700000;
-
-    Timer t;
-
     std::vector<uint64_t> primes;
     primesieve::generate_n_primes(end + 1, &primes);
-    
+
     int threadNum = std::thread::hardware_concurrency();
     std::vector<std::thread> threads;
     threads.reserve(threadNum);
@@ -66,9 +59,15 @@ int main()
 
     for (auto& thread : threads)
         thread.join();
+}
 
-    t.Stop();
+static void BMFunction(benchmark::State& state) {
+    for (auto _ : state)
+    {
+        Run(1, 100000);
+    }
+}
 
-    std::cout << "Took: " << t.duration * 0.001 << "ms\n";
-    std::cin.get();
-}*/
+BENCHMARK(BMFunction);
+
+BENCHMARK_MAIN();*/
