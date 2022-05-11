@@ -91,7 +91,7 @@ int main()
     // Hardware lookup
     int threadNum = std::thread::hardware_concurrency();
 
-    Timer t;
+    TIMER(calc);
 
     // Generate end + 1 primes
     std::vector<uint64_t> prePrimes;
@@ -210,9 +210,5 @@ int main()
     // Wait till all threads are complete
     for (std::thread& t : threads) { t.join(); }
 
-    t.Stop();
-    std::cout << "Took: " << t.duration * 0.001 << "ms" << std::endl;
-    std::cout << "Finished!" << std::endl;
-
-    std::cin.get();
+    STOP_LOG(calc);
 }

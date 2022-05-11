@@ -52,7 +52,7 @@ int main()
     uint64_t start = IntInput("Start: ");
     uint64_t end = IntInput("End: ");
 
-    Timer t;
+    TIMER(calc);
 
     std::vector<uint64_t> primes;
     primesieve::generate_n_primes(end + 1, &primes);
@@ -67,7 +67,5 @@ int main()
     for (auto& thread : threads)
         thread.join();
 
-    t.Stop();
-
-    std::cout << "Took: " << t.duration * 0.001 << "ms\n";
+    STOP_LOG(calc);
 }
