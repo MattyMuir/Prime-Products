@@ -3,20 +3,11 @@
 #include <iostream>
 #include <thread>
 
-#include "mpzArray.h"
-#include "Timer.h"
+#include "../mpzArray.h"
+#include "../Timer.h"
+#include "../util.h"
 
-#define USE_ARRAY 0
-
-//static size_t allocBatch;
-
-double Log2(mpz_t x)
-{
-    signed long pow;
-    double d = mpz_get_d_2exp(&pow, x);
-
-    return log2(d) + pow;
-}
+#define USE_ARRAY 1
 
 bool MultiplicationIsSafe(uint64_t a, uint64_t b)
 {
@@ -141,8 +132,6 @@ void Branch(int start, int interval, int max)
 #endif
     }
 
-    //std::cout << "prod size: " << Log2(prod) << std::endl;
-
     mpz_clear(prod);
 
 #if USE_ARRAY == 0
@@ -153,15 +142,9 @@ void Branch(int start, int interval, int max)
 #endif
 }
 
-/*int main()
+int main()
 {
-    std::string NStr = "-1";
-    while (std::stoi(NStr) < 0)
-    {
-        std::cout << "N: ";
-        getline(std::cin, NStr);
-    }
-    unsigned int N = std::stoi(NStr, nullptr, 10);
+    unsigned int N = IntInput("N: ");
 
     std::vector<std::thread> threads;
     int hardThreads = std::thread::hardware_concurrency();
@@ -185,4 +168,4 @@ void Branch(int start, int interval, int max)
     std::cout << "Took: " << t.duration * 0.000001 << "s" << std::endl;
 
     std::cin.get();
-}*/
+}

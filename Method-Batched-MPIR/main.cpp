@@ -4,19 +4,12 @@
 #include <thread>
 #include <sstream>
 
-#include "mpzArray.h"
-#include "Timer.h"
+#include "../mpzArray.h"
+#include "../Timer.h"
+#include "../util.h"
 
 #define CONSTANT_WIDTH_BATCHES 0
 #define LOG_STATUS 1
-
-/*int IntInput(std::string message)
-{
-    std::string str;
-    std::cout << message;
-    getline(std::cin, str);
-    return std::stoi(str, nullptr, 10);
-}*/
 
 void BatchRanges(int w, int n, std::vector<int>& starts, std::vector<int>& ends)
 {
@@ -89,7 +82,7 @@ void CheckBatch(int startIndex, int endIndex, int arrOffset, mpz_t& startProd, s
 #endif
 }
 
-/*int main()
+int main()
 {
     unsigned int start = IntInput("Start: ");
     unsigned int end = IntInput("End: ");
@@ -162,7 +155,7 @@ void CheckBatch(int startIndex, int endIndex, int arrOffset, mpz_t& startProd, s
     {
         int startIndex = starts[b];
         int endIndex = ends[b];
-        
+
         // Multiply batch in arr
         activeNum = endIndex - startIndex + 1;
 
@@ -222,4 +215,4 @@ void CheckBatch(int startIndex, int endIndex, int arrOffset, mpz_t& startProd, s
     std::cout << "Finished!" << std::endl;
 
     std::cin.get();
-}*/
+}

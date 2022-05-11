@@ -3,16 +3,16 @@
 #include <vector>
 #include <thread>
 #include <sstream>
+#include <fstream>
 
 #include <primesieve.hpp>
 #include <libdivide.h>
-//#include <benchmark/benchmark.h>
 
-#include "Timer.h"
+#include "../Timer.h"
 
 #define THREAD_COUT(stream) std::stringstream ss; ss << stream; std::cout << ss.str()
 
-/*int IntInput(std::string message)
+int IntInput(std::string message)
 {
     std::string str;
     std::cout << message;
@@ -31,6 +31,8 @@ void Branch(uint64_t start, uint64_t end, int threadNum, int threadIndex, std::v
         modPrime = (*primesPtr)[n];
         modPrimeD = libdivide::divider<uint64_t>(modPrime);
 
+        float invModPrime = 1.0f / modPrime;
+
         threshold = modPrimeD.divide(UINT64_MAX);
 
         for (int i = 0; i < n; i++)
@@ -39,14 +41,19 @@ void Branch(uint64_t start, uint64_t end, int threadNum, int threadIndex, std::v
             if (prod > threshold)
                 prod -= modPrimeD.divide(prod) * modPrime;
         }
-
         prod -= modPrimeD.divide(prod) * modPrime;
+
         if (prod == modPrime - 1) { THREAD_COUT(n << "\n"); }
     }
 }
 
-void Run(uint64_t start, uint64_t end)
+int main()
 {
+    uint64_t start = IntInput("Start: ");
+    uint64_t end = IntInput("End: ");
+
+    Timer t;
+
     std::vector<uint64_t> primes;
     primesieve::generate_n_primes(end + 1, &primes);
 
@@ -59,15 +66,8 @@ void Run(uint64_t start, uint64_t end)
 
     for (auto& thread : threads)
         thread.join();
+
+    t.Stop();
+
+    std::cout << "Took: " << t.duration * 0.001 << "ms\n";
 }
-
-static void BMFunction(benchmark::State& state) {
-    for (auto _ : state)
-    {
-        Run(1, 100000);
-    }
-}
-
-BENCHMARK(BMFunction);
-
-BENCHMARK_MAIN();*/
