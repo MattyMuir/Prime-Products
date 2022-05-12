@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Method-Cached-Needle", "Met
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Method-Strided-MPIR", "Method-Strided-MPIR\Method-Strided-MPIR.vcxproj", "{7A81820C-DF3A-4E78-AC8B-5B54B461D4BF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Verify", "Verify\Verify.vcxproj", "{49187584-F171-412C-9D74-1C41EB8FB651}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,6 +63,14 @@ Global
 		{7A81820C-DF3A-4E78-AC8B-5B54B461D4BF}.Release|x64.Build.0 = Release|x64
 		{7A81820C-DF3A-4E78-AC8B-5B54B461D4BF}.Release|x86.ActiveCfg = Release|Win32
 		{7A81820C-DF3A-4E78-AC8B-5B54B461D4BF}.Release|x86.Build.0 = Release|Win32
+		{49187584-F171-412C-9D74-1C41EB8FB651}.Debug|x64.ActiveCfg = Debug|x64
+		{49187584-F171-412C-9D74-1C41EB8FB651}.Debug|x64.Build.0 = Debug|x64
+		{49187584-F171-412C-9D74-1C41EB8FB651}.Debug|x86.ActiveCfg = Debug|Win32
+		{49187584-F171-412C-9D74-1C41EB8FB651}.Debug|x86.Build.0 = Debug|Win32
+		{49187584-F171-412C-9D74-1C41EB8FB651}.Release|x64.ActiveCfg = Release|x64
+		{49187584-F171-412C-9D74-1C41EB8FB651}.Release|x64.Build.0 = Release|x64
+		{49187584-F171-412C-9D74-1C41EB8FB651}.Release|x86.ActiveCfg = Release|Win32
+		{49187584-F171-412C-9D74-1C41EB8FB651}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

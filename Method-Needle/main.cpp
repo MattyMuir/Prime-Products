@@ -49,8 +49,11 @@ void Branch(uint64_t start, uint64_t end, int threadNum, int threadIndex, std::v
 
 int main()
 {
-    uint64_t start = IntInput("Start: ");
-    uint64_t end = IntInput("End: ");
+    //uint64_t start = IntInput("Start: ");
+    //uint64_t end = IntInput("End: ");
+
+    uint64_t start = 1;
+    uint64_t end = 200000;
 
     TIMER(calc);
 
