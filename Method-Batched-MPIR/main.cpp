@@ -91,8 +91,6 @@ int main()
     // Hardware lookup
     int threadNum = std::thread::hardware_concurrency();
 
-    TIMER(calc);
-
     // Generate end + 1 primes
     std::vector<uint64_t> prePrimes;
     std::vector<uint64_t> primes;
@@ -108,6 +106,8 @@ int main()
     {
         primes.push_back(it.next_prime());
     }
+
+    TIMER(calc);
 
     // Copy N primes into arr
     mpzArray preArr;

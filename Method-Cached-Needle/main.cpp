@@ -8,7 +8,7 @@
 #include "../Timer.h"
 #include "../util.h"
 
-#define SAVE_REMS 1
+#define SAVE_REMS 0
 
 #define THREAD_COUT(stream) { std::stringstream ss; ss << stream; std::cout << ss.str(); }
 
@@ -50,8 +50,6 @@ void ProcessBatches(uint64_t start, int xBatchNum, int threadNum, int threadInde
 
             for (int id = 0; id < X_BATCH; id++)
             {
-                // xBatchID = 13    id = 13
-
                 uint64_t n = batchStart + id;
                 uint64_t& prod = prods[id];
 
@@ -61,26 +59,38 @@ void ProcessBatches(uint64_t start, int xBatchNum, int threadNum, int threadInde
                 // Check if thread is active for current tile
                 if (n > ty * Y_BATCH)
                 {
-                    int iThresh = std::min((n - ty * Y_BATCH) / 2, Y_BATCH / 2);
-
-                    for (int i = 0; i < iThresh; i++)
+                    // Tile will only be partially completed
+                    if (n - ty * Y_BATCH <= Y_BATCH)
                     {
-                        prod *= FastMod(prePrimes[i], modPrime, modDiv);
-                        prod = FastMod(prod, modPrime, modDiv);
-                    }
+                        int iThresh = std::min((n - ty * Y_BATCH) / 2, Y_BATCH / 2);
 
-                    if (iThresh < Y_BATCH / 2 || n == ty * Y_BATCH + Y_BATCH) // Tile was only partially completed, do final multiplication and check value
-                    {
+                        for (int i = 0; i < iThresh; i++)
+                        {
+                            prod *= FastMod(prePrimes[i], modPrime, modDiv);
+                            prod = FastMod(prod, modPrime, modDiv);
+                        }
+
                         if ((n & 1) == 1)
                             prod *= primes[n - 1];
-
                         prod = FastMod(prod, modPrime, modDiv);
+
+                        // Now that the partial tile is complete, the whole prod is
+                        // Check final remainder
                         if (prod == modPrime - 1)
                             THREAD_COUT(n << '\n');
 
 #if SAVE_REMS
                         rems[n - start] = prod;
 #endif
+                    }
+                    else // Tile will be fully completed
+                    {
+                        
+                        for (int i = 0; i < Y_BATCH / 2; i++)
+                        {
+                            prod *= FastMod(prePrimes[i], modPrime, modDiv);
+                            prod = FastMod(prod, modPrime, modDiv);
+                        }
                     }
                 }
             }
@@ -90,23 +100,20 @@ void ProcessBatches(uint64_t start, int xBatchNum, int threadNum, int threadInde
 
 int main()
 {
-	//uint64_t start = IntInput("Start: ");
-	//uint64_t end = IntInput("End: ");
-
-    uint64_t start = 1;
-    uint64_t end = 100000;
+	uint64_t start = IntInput("Start: ");
+	uint64_t end = IntInput("End: ");
 
 	std::vector<uint64_t> primes;
 	primesieve::generate_n_primes(((end + 1 + Y_BATCH) / Y_BATCH) * Y_BATCH, &primes);
 
-    int nThreads = std::thread::hardware_concurrency() - 1;
+    int nThreads = std::thread::hardware_concurrency();
     //int nThreads = 1;
     std::vector<std::thread> threads;
     threads.reserve(nThreads);
 
-    TIMER(calc);
-
     rems.resize(end - start + 1);
+
+    TIMER(calc);
 
     int xBatchNum = (end - start) / X_BATCH;
     for (int ti = 0; ti < nThreads; ti++)
@@ -118,6 +125,10 @@ int main()
     STOP_LOG(calc);
 
     std::cout << "Done\n";
+#if SAVE_REMS
     SaveRemainders(start, end, rems);
     std::cout << "Saved\n";
+#endif
+
+    std::cin.get();
 }
