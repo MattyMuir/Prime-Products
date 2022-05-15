@@ -8,7 +8,7 @@ int correct = 0;
 
 int main()
 {
-	std::ifstream in("../rems.txt");
+	std::ifstream in("../rems.log");
 
 	uint64_t start, end;
 
@@ -18,10 +18,14 @@ int main()
 	std::getline(in, line);
 	end = std::stoull(line);
 
+	std::cout << "Start: " << start << '\n';
+	std::cout << "End: " << end << '\n';
+	std::cout << "================\n";
+
 	std::vector<uint64_t> primes;
 	primesieve::generate_n_primes(end + 1, &primes);
 
-	for (int n = start; n <= end; n++)
+	for (int n = start;; n++)
 	{
 		uint64_t prod = 1;
 		uint64_t modPrime = primes[n];
@@ -32,6 +36,11 @@ int main()
 		}
 		
 		std::getline(in, line);
+		if (line.empty())
+		{
+			std::cout << "\nFile ended at n = " << n << '\n';
+			break;
+		}
 		uint64_t check = std::stoull(line);
 
 		if (prod == check)
@@ -40,7 +49,7 @@ int main()
 		}
 		else
 		{
-			std::cout << "Wrong at " << n << '\n';
+			std::cout << " - Wrong at " << n << '\n';
 		}
 		std::cout << "Correct: " << correct << '\r';
 	}
