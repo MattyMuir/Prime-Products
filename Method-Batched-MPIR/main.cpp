@@ -8,50 +8,22 @@
 #include "../Timer.h"
 #include "../util.h"
 
-#define CONSTANT_WIDTH_BATCHES 0
 #define LOG_STATUS 1
 
-void BatchRanges(int w, int n, std::vector<int>& starts, std::vector<int>& ends)
+void BatchRanges(int n, uint64_t start, uint64_t end, std::vector<int>& starts, std::vector<int>& ends)
 {
     starts.reserve(n);
     ends.reserve(n);
 
-#if CONSTANT_WIDTH_BATCHES == 1
-    int batchSize = w / n;
-    for (int t = 0; t < n; t++)
-    {
-        starts.push_back(batchSize * t);
-        if (t < n - 1)
-        {
-            ends.push_back(batchSize * (t + 1) - 1);
-        }
-        else
-        {
-            ends.push_back(w - 1);
-        }
-    }
-#else
-    long double a = 1;
+    starts.push_back(0);
 
-    for (int i = 0; i < n - 1; i++)
+    for (int ni = 1; ni < n; ni++)
     {
-        a = (a + sqrt(a * a + 4)) / 2;
+        ends.push_back(sqrt(((n - ni) * start * start + ni * end * end) / (n)) - start);
+        starts.push_back(ends[ni - 1] + 1);
     }
 
-    long double x1 = w / a;
-
-    a = 0;
-    for (int i = 0; i < n; i++)
-    {
-
-        long double start = x1 * a;
-        a = (a + sqrt(a * a + 4)) / 2;
-        long double end = x1 * a;
-
-        starts.push_back(ceil(start));
-        ends.push_back((i == n - 1) ? (w - 1) : (floor(end)));
-    }
-#endif
+    ends.push_back(end - start);
 }
 
 void CheckBatch(int startIndex, int endIndex, int arrOffset, mpz_t& startProd, std::vector<uint64_t>& primes)
@@ -148,7 +120,7 @@ int main()
     // Calculate batch ranges
     std::vector<int> starts;
     std::vector<int> ends;
-    BatchRanges(N, threadNum, starts, ends);
+    BatchRanges(threadNum, start, end, starts, ends);
 
     // Loop through batches
     for (int b = 0; b < threadNum - 1; b++)
