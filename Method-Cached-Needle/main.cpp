@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <thread>
 #include <sstream>
 
@@ -100,35 +101,37 @@ void ProcessBatches(uint64_t start, int xBatchNum, int threadNum, int threadInde
 
 int main()
 {
-	uint64_t start = IntInput("Start: ");
-	uint64_t end = IntInput("End: ");
+    // Get thread count
+    int threadNum = std::thread::hardware_concurrency();
 
+	//uint64_t start = IntInput("Start: ");
+	//uint64_t end = IntInput("End: ");
+
+    uint64_t start = 1;
+    uint64_t end = 300000;
+
+    int xBatchNum = (end - start) / X_BATCH;
+
+    // Generate primes
 	std::vector<uint64_t> primes;
 	primesieve::generate_n_primes(((end + 1 + Y_BATCH) / Y_BATCH) * Y_BATCH, &primes);
 
-    int nThreads = std::thread::hardware_concurrency();
-    //int nThreads = 1;
-    std::vector<std::thread> threads;
-    threads.reserve(nThreads);
-
+#if SAVE_REMS
     rems.resize(end - start + 1);
+#endif
 
     TIMER(calc);
 
-    int xBatchNum = (end - start) / X_BATCH;
-    for (int ti = 0; ti < nThreads; ti++)
-        threads.emplace_back(ProcessBatches, start, xBatchNum, nThreads, ti, std::ref(primes));
+    std::vector<std::thread> threads;
+    for (int ti = 0; ti < threadNum; ti++)
+        threads.emplace_back(ProcessBatches, start, xBatchNum, threadNum, ti, std::ref(primes));
 
-    for (int ti = 0; ti < nThreads; ti++)
+    for (int ti = 0; ti < threadNum; ti++)
         threads[ti].join();
 
     STOP_LOG(calc);
 
-    std::cout << "Done\n";
 #if SAVE_REMS
     SaveRemainders(start, end, rems);
-    std::cout << "Saved\n";
 #endif
-
-    std::cin.get();
 }
