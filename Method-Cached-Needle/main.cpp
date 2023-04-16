@@ -107,8 +107,8 @@ int main()
 	//uint64_t start = IntInput("Start: ");
 	//uint64_t end = IntInput("End: ");
 
-    uint64_t start = 1;
-    uint64_t end = 300000;
+    uint64_t start  = 1'000'000;
+    uint64_t end    = 1'100'000;
 
     int xBatchNum = (end - start) / X_BATCH;
 
