@@ -365,5 +365,8 @@ FodyWeavers.xsd
 # VTune Profiler
 VTune*Profiler*Results/
 
-# GPU Cache
+# GPUCache
 GPUCache/
+
+# txt files
+*.txt

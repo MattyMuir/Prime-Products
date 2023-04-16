@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <vector>
 
 #include <primesieve.hpp>
 
@@ -8,7 +9,7 @@ int correct = 0;
 
 int main()
 {
-	std::ifstream in("../rems.log");
+	std::ifstream in("../rems.txt");
 
 	uint64_t start, end;
 
