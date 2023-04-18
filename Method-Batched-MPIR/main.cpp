@@ -1,8 +1,9 @@
 #include <mpir.h>
-#include <primesieve.hpp>
 #include <iostream>
 #include <thread>
-#include <sstream>
+#include <format>
+
+#include <primesieve.hpp>
 
 #include "../mpzArray.h"
 #include "../Timer.h"
@@ -38,19 +39,17 @@ void CheckBatch(int startIndex, int endIndex, int arrOffset, mpz_t& startProd, s
         mpz_mul_ui(startProd, startProd, primes[startIndex - 1 - arrOffset]);
         mpz_add_ui(startProd, startProd, 1);
         if (mpz_divisible_ui_p(startProd, primes[startIndex - arrOffset]))
-        {
-            std::string nStr;
-            nStr = std::to_string(startIndex) + "\n";
-            std::cout << nStr;
-        }
+            std::cout << std::format("{}\n", startIndex);
         mpz_sub_ui(startProd, startProd, 1);
     }
 
 #if LOG_STATUS == 1
-    t.Stop();
-    std::stringstream msg;
-    msg << "Thread: " << threadStart << " - " << endIndex << " finished in " << t.duration * 0.000001 << "s" << std::endl;
-    std::cout << msg.str();
+    {
+        using namespace std::chrono;
+        t.Stop(false);
+        std::cout << std::format("Thread {} - {} finished in {}\n", threadStart, endIndex,
+            duration_cast<milliseconds>(t.GetDuration()));
+    }
 #endif
 }
 
