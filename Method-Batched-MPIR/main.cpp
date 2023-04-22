@@ -1,3 +1,4 @@
+#if 0
 #include <mpir.h>
 #include <iostream>
 #include <thread>
@@ -6,7 +7,7 @@
 #include <primesieve.hpp>
 
 #include "../mpzArray.h"
-#include "../Timer.h"
+#include "Timer.h"
 #include "../util.h"
 
 #define LOG_STATUS 1
@@ -183,3 +184,4 @@ int main()
 
     STOP_LOG(calc);
 }
+#endif

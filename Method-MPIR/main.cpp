@@ -4,18 +4,13 @@
 #include <mpirxx.h>
 #include <primesieve.hpp>
 
-#include "../Timer.h"
+#include "Timer.h"
 #include "../util.h"
 
-int main()
+std::vector<uint64_t> primes;
+
+void Run(uint64_t start, uint64_t end)
 {
-    TIMER(t);
-
-    uint64_t end = 10'000;
-
-    std::vector<uint64_t> primes;
-    primesieve::generate_n_primes(end + 1, &primes);
-
     mpz_class prod = 2;
     for (uint64_t n = 1; n <= end; n++)
     {
@@ -25,6 +20,9 @@ int main()
         --prod;
         prod *= primes[n];
     }
+}
 
-    STOP_LOG(t);
+int main()
+{
+    RunTests(Run, primes);
 }

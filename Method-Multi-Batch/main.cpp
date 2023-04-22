@@ -6,7 +6,7 @@
 #include <primesieve.hpp>
 #include <mpirxx.h>
 
-#include "../Timer.h"
+#include "Timer.h"
 #include "../util.h"
 
 static constexpr uint64_t MULTI_BATCH_SIZE = 512;
@@ -85,25 +85,28 @@ void ProcessStridedBatches(uint64_t start, uint64_t firstBatchIndex, uint64_t nu
 	}
 }
 
-int main()
+void Run(uint64_t start, uint64_t end)
 {
-	uint64_t start	= 1;
-	uint64_t end	= 400'000;
-
-	// Generate primes
-	primesieve::generate_n_primes(end + 1, &primes);
-
 	uint64_t numBatches = (end - start + 1) / MULTI_BATCH_SIZE;
 
 	// Start threads
 	uint32_t numThreads = std::thread::hardware_concurrency();
 	std::vector<std::thread> threads;
 
-	TIMER(t);
 	for (uint32_t ti = 0; ti < std::min<uint64_t>(numThreads, numBatches); ti++)
 		threads.emplace_back(ProcessStridedBatches, start, ti, numBatches, numThreads);
 
 	for (std::thread& thread : threads)
 		thread.join();
-	STOP_LOG(t);
+}
+
+int main()
+{
+	uint64_t start	= 1;
+	uint64_t end	= 100'000;
+
+	// Generate primes
+	primesieve::generate_n_primes(end + 1, &primes);
+
+	Run(start, end);
 }
