@@ -79,8 +79,11 @@ void ProcessStridedBatches(uint64_t start, uint64_t firstBatchIndex, uint64_t nu
 			primeN++;
 
 			uint64_t modPrime = primes[primeN];
-			mpz_class rem = prod % modPrime;
-			if (rem.get_ui() == modPrime - 1) std::cout << primeN << '\n';
+			
+			++prod;
+			if (mpz_divisible_ui_p(prod.get_mpz_t(), modPrime))
+				std::cout << std::format("{}\n", primeN);
+			--prod;
 		}
 	}
 }
@@ -108,5 +111,7 @@ int main()
 	// Generate primes
 	primesieve::generate_n_primes(end + 1, &primes);
 
+	TIMER(t);
 	Run(start, end);
+	STOP_LOG(t);
 }

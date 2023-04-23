@@ -1,33 +1,33 @@
 #include <iostream>
 #include <vector>
 #include <mutex>
-#include <sstream>
 #include <thread>
 #include <iomanip>
 #include <locale>
+#include <format>
 
 #include <mpirxx.h>
 #include <primesieve.hpp>
 #include <libdivide.h>
 
-#include "../Timer.h"
+#include "Timer.h"
 
-constexpr uint64_t MAX_BATCH = (uint64_t)1 << 15;
+constexpr uint64_t MAX_BATCH = 1ULL << 15;
 
 std::mutex mu;
 volatile uint64_t next = 1;
 
 void CollapseProduct(std::vector<mpz_class>& packets)
 {
-	int right = packets.size() - 1;
-	while (right)
+	uint64_t last = packets.size() - 1;
+	while (last)
 	{
-		int i = 0;
-		for (; i < (right + 1) / 2; i++)
-			packets[i] = packets[i * 2] * packets[i * 2 + 1];
-		if (right % 2 == 0)
-			packets[i] = packets[right];
-		right /= 2;
+		for (uint64_t pairFirst = 0; pairFirst < (last + 1) / 2; pairFirst++)
+		{
+			uint64_t pairLast = last - pairFirst;
+			packets[pairFirst] *= packets[pairLast];
+		}
+		last /= 2;
 	}
 }
 
@@ -64,14 +64,10 @@ void DoWork()
 		
 		// Check
 		uint64_t modPrime = it.next_prime();
-		prod += 1;
+		++prod;
 		if (mpz_divisible_ui_p(prod.get_mpz_t(), modPrime))
-		{
-			std::stringstream ss;
-			ss << '(' << n << ")             \n";
-			std::cout << ss.str();
-		}
-		prod -= 1;
+			std::cout << std::format("({})\n", n);
+		--prod;
 
 		prod *= modPrime;
 		prodN++;
